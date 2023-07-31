@@ -27,7 +27,15 @@ jobs:
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set default.region us-east-1
 
+      - name: Set up SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key.pem
+          chmod 600 ~/.ssh/deploy_key.pem
+
       - name: Deploy to EC2
         run: |
-          scp -i ${{ secrets.SSH_PRIVATE_KEY }} -r ./ ec2-user@44.201.150.54:/app
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@44.201.150.54 "cd /app && npm install && node index.js"
+          scp -i ~/.ssh/deploy_key.pem -r ./ ec2-user@44.201.150.54:/app
+          ssh -i ~/.ssh/deploy_key.pem ec2-user@44.201.150.54 "cd /app && npm install && node index.js"
