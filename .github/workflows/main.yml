@@ -29,5 +29,5 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          scp -i ${{ secrets.EC2_PRIVATE_KEY }} -r /path/to/your/app user@your-instance-ip:/path/to/destination/folder
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} user@your-instance-ip "cd /path/to/destination/folder && npm install && node app.js"
+          scp -i ${{ secrets.SSH_PRIVATE_KEY }} -r ./ ec2-user@44.201.150.54:/app
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@44.201.150.54 "cd /app && npm install && node index.js"
